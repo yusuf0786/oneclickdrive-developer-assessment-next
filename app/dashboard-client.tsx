@@ -1,16 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+// import Image from "next/image"
 import { useRouter } from "next/navigation"
 import type { CarListing } from "../lib/types"
 import { useNotifications } from "../context/NotificationContext"
 import EditListingModal from "../components/EditListingModal"
-import { Car, Check, X, Edit, Filter, ChevronLeft, ChevronRight } from "lucide-react"
+import { Car, Check, X, Filter, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+// import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import ListingRow from "./ListingRow"
 
 interface DashboardClientProps {
   initialListings: CarListing[]
@@ -132,18 +133,18 @@ export default function DashboardClient({
     fetchListings(page, statusFilter)
   }
 
-  const getStatusVariant = (status: string): "default" | "secondary" | "destructive" => {
-    switch (status) {
-      case "approved":
-        return "default"
-      case "rejected":
-        return "destructive"
-      case "pending":
-        return "secondary"
-      default:
-        return "secondary"
-    }
-  }
+  // const getStatusVariant = (status: string): "default" | "secondary" | "destructive" => {
+  //   switch (status) {
+  //     case "approved":
+  //       return "default"
+  //     case "rejected":
+  //       return "destructive"
+  //     case "pending":
+  //       return "secondary"
+  //     default:
+  //       return "secondary"
+  //   }
+  // }
 
   return (
     <>
@@ -267,64 +268,12 @@ export default function DashboardClient({
                   </TableRow>
                 ) : (
                   listings.map((listing) => (
-                    <TableRow key={listing.id}>
-                      <TableCell className="min-w-[280px]">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-16 w-24">
-                            <Image
-                              src={listing.imageUrl || "/placeholder.svg"}
-                              alt={listing.title}
-                              width={96}
-                              height={64}
-                              className="h-16 w-24 object-cover rounded-md"
-                            />
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{listing.title}</div>
-                            <div className="text-sm text-gray-500">
-                              {listing.year} {listing.make} {listing.model}
-                            </div>
-                            <div className="text-sm text-gray-500">{listing.location}</div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm font-medium text-gray-900">AED {listing.pricePerDay}</div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(listing.status)}>{listing.status}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-500">{listing.submittedBy}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          {listing.status === "pending" && (
-                            <>
-                              <Button
-                                size="sm"
-                                onClick={() => handleStatusChange(listing.id, "approve")}
-                                className="bg-green-600 hover:bg-green-700"
-                              >
-                                <Check className="w-3 h-3 mr-1" />
-                                Approve
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => handleStatusChange(listing.id, "reject")}
-                                className="text-white"
-                              >
-                                <X className="w-3 h-3 mr-1" />
-                                Reject
-                              </Button>
-                            </>
-                          )}
-                          <Button size="sm" variant="outline" onClick={() => handleEdit(listing)}>
-                            <Edit className="w-3 h-3 mr-1" />
-                            Edit
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                    <ListingRow
+                      key={listing.id}
+                      listing={listing}
+                      handleStatusChange={handleStatusChange}
+                      handleEdit={handleEdit}
+                     />
                   ))
                 )}
               </TableBody>
@@ -358,7 +307,7 @@ export default function DashboardClient({
                     </p>
                   </div>
                   <div>
-                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                    <nav className="relative z-0 inline-flex rounded-md space-x-2">
                       <Button
                         variant="outline"
                         size="sm"
