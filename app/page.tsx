@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import DashboardClient from "./dashboard-client"
 import { listings as allListings } from "@/lib/data"
+import Header from "@/components/Header"
 
 function getListingsFromMemory(page = 1, status = "all") {
   const limit = 10
@@ -36,6 +37,8 @@ export default async function DashboardPage(props: {params: Promise<SearchParams
   const data = getListingsFromMemory(page, status)
 
   return (
+    <>
+    <Header/>
     <DashboardClient
       initialListings={data.listings}
       initialTotal={data.total}
@@ -43,5 +46,6 @@ export default async function DashboardPage(props: {params: Promise<SearchParams
       initialTotalPages={data.totalPages}
       initialStatus={status}
     />
+    </>
   )
 }

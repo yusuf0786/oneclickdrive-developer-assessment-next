@@ -50,7 +50,7 @@ export default function DashboardClient({
       setCurrentPage(data.page)
       setTotalPages(data.totalPages)
 
-      router.push(`/dashboard?page=${page}&status=${status}`)
+      router.push(`/?page=${page}&status=${status}`)
     } catch (error) {
       addNotification({
         type: "error",
@@ -151,7 +151,7 @@ export default function DashboardClient({
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <Car className="w-6 h-6 text-blue-600" />
@@ -165,7 +165,7 @@ export default function DashboardClient({
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center">
                 <div className="p-2 bg-yellow-100 rounded-lg">
                   <Filter className="w-6 h-6 text-yellow-600" />
@@ -181,7 +181,7 @@ export default function DashboardClient({
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center">
                 <div className="p-2 bg-green-100 rounded-lg">
                   <Check className="w-6 h-6 text-green-600" />
@@ -197,7 +197,7 @@ export default function DashboardClient({
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center">
                 <div className="p-2 bg-red-100 rounded-lg">
                   <X className="w-6 h-6 text-red-600" />
@@ -215,11 +215,13 @@ export default function DashboardClient({
 
         {/* Filters */}
         <Card className="mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-4">
-              <Filter className="w-5 h-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-700">Filter by status:</span>
-              <div className="flex space-x-2">
+          <CardContent className="p-0">
+            <div className="flex items-center space-x-2">
+              <Filter className="w-5 h-5 text-gray-400 ms-3" />
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap py-3">
+                Filter by status:
+              </span>
+              <div className="flex space-x-2 py-3 pe-2 overflow-x-auto">
                 {["all", "pending", "approved", "rejected"].map((status) => (
                   <Button
                     key={status}
@@ -266,7 +268,7 @@ export default function DashboardClient({
                 ) : (
                   listings.map((listing) => (
                     <TableRow key={listing.id}>
-                      <TableCell>
+                      <TableCell className="min-w-[280px]">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-16 w-24">
                             <Image
