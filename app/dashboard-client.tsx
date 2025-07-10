@@ -283,18 +283,10 @@ export default function DashboardClient({
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t">
                 <div className="flex-1 flex justify-between sm:hidden">
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
+                  <Button variant="outline" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} >
                     Previous
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
+                  <Button variant="outline" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} >
                     Next
                   </Button>
                 </div>
@@ -307,36 +299,99 @@ export default function DashboardClient({
                     </p>
                   </div>
                   <div>
-                    <nav className="relative z-0 inline-flex rounded-md space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </Button>
-
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <Button
-                          key={page}
-                          variant={page === currentPage ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handlePageChange(page)}
+                    {/* Replace the existing pagination buttons section with this: */}
+                    <div>
+                      <nav className="relative z-0 inline-flex rounded-md space-x-2">
+                        <Button variant="outline" size="sm" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}
                         >
-                          {page}
+                          <ChevronLeft className="w-5 h-5" />
                         </Button>
-                      ))}
 
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </Button>
-                    </nav>
+                        {/* Smart pagination logic */}
+                        {(() => {
+                          const pages = []
+                          const totalPagesToShow = 5
+                          const halfRange = Math.floor(totalPagesToShow / 2)
+
+                          // Always show first page
+                          if (currentPage > halfRange + 1) {
+                            pages.push(
+                              <Button key={1} variant="outline" size="sm" onClick={() => handlePageChange(1)}>
+                                1
+                              </Button>,
+                            )
+
+                            // Add ellipsis if there's a gap
+                            if (currentPage > halfRange + 2) {
+                              pages.push(
+                                <span
+                                  key="ellipsis-start"
+                                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+                                >
+                                  ...
+                                </span>,
+                              )
+                            }
+                          }
+
+                          // Calculate start and end of visible range
+                          let start = Math.max(1, currentPage - halfRange)
+                          let end = Math.min(totalPages, currentPage + halfRange)
+
+                          // Adjust range if we're near the beginning or end
+                          if (end - start + 1 < totalPagesToShow) {
+                            if (start === 1) {
+                              end = Math.min(totalPages, start + totalPagesToShow - 1)
+                            } else if (end === totalPages) {
+                              start = Math.max(1, end - totalPagesToShow + 1)
+                            }
+                          }
+
+                          // Add the visible page range
+                          for (let i = start; i <= end; i++) {
+                            // Skip if we already added page 1
+                            if (i === 1 && currentPage > halfRange + 1) continue
+
+                            // Skip if we're about to add the last page separately
+                            if (i === totalPages && currentPage < totalPages - halfRange) continue
+
+                            pages.push(
+                              <Button key={i} variant={i === currentPage ? "default" : "outline"} size="sm" onClick={() => handlePageChange(i)} >
+                                {i}
+                              </Button>,
+                            )
+                          }
+
+                          // Always show last page
+                          if (currentPage < totalPages - halfRange) {
+                            // Add ellipsis if there's a gap
+                            if (currentPage < totalPages - halfRange - 1) {
+                              pages.push(
+                                <span
+                                  key="ellipsis-end"
+                                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+                                >
+                                  ...
+                                </span>,
+                              )
+                            }
+
+                            pages.push(
+                              <Button key={totalPages} variant="outline" size="sm" onClick={() => handlePageChange(totalPages)} >
+                                {totalPages}
+                              </Button>,
+                            )
+                          }
+
+                          return pages
+                        })()}
+
+                        <Button variant="outline" size="sm" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </Button>
+                      </nav>
+                    </div>
                   </div>
                 </div>
               </div>
